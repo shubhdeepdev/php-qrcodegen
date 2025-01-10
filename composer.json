@@ -1,0 +1,23 @@
+{
+    "name": "golivehost/php-qrcodegen",
+    "description": "A simple PHP library to generate QR codes using the GoLive.host QR Generator API.",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Go Live Web Solutions",
+            "email": "contact@golive.host"
+        }
+    ],
+    "license": "GoSecureDNS_Open_License",
+    "autoload": {
+        "psr-4": {
+            "GoLiveHost\\QRCodeGen\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^7.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    }
+}
