@@ -2,6 +2,11 @@
 
 **GoLiveHost PHP QR Code Generator** is a simple PHP library designed to easily generate QR codes using the GoLive.host QR Generator API.
 
+### Requirements
+
+- **cURL** extension enabled in PHP
+- **PHP version**: 7.3 or higher (compatible with PHP 8.0+)
+
 ## Installation
 
 To install this library, use Composer. Run the following command:

@@ -43,28 +43,53 @@ class QRCodeGenerator
         $this->label = $label;
     }
 
-    /**
-     * Generate the QR code and return the binary image data.
-     *
-     * @return string Binary image data
-     * @throws \Exception if QR code generation fails
-     */
-    public function generateQR()
-    {
-        $url = 'https://api.golive.host/Generator/QR/v3?data=' . urlencode($this->data) . '&size=' . urlencode($this->size);
-        
-        if ($this->label) {
-            $url .= '&label=' . urlencode($this->label);
-        }
+/**
+ * Generate the QR code and return the binary image data using cURL without SSL verification.
+ *
+ * @return string Binary image data
+ * @throws \Exception if QR code generation fails
+ */
+public function generateQR()
+{
+    // Build the API URL
+    $url = 'https://api.golive.host/Generator/QR/v3?data=' . urlencode($this->data) . '&size=' . urlencode($this->size);
 
-        // Fetch QR code image from the API
-        $image = file_get_contents($url);
-        if ($image === false) {
-            throw new \Exception("Failed to fetch QR code from API");
-        }
-
-        return $image;
+    if ($this->label) {
+        $url .= '&label=' . urlencode($this->label);
     }
+
+    // Initialize cURL
+    $ch = curl_init();
+    curl_setopt_array($ch, [
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,       // Return the response as a string
+        CURLOPT_FAILONERROR => true,          // Fail on HTTP error codes (4xx, 5xx)
+        CURLOPT_TIMEOUT => 5,                 // Set a timeout for the request
+        CURLOPT_CONNECTTIMEOUT => 3,          // Connection timeout
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_2TLS, // Use HTTP/2 if available
+        CURLOPT_SSL_VERIFYPEER => false,      // Disable SSL certificate verification
+        CURLOPT_SSL_VERIFYHOST => 0,          // Disable hostname verification
+        CURLOPT_TCP_FASTOPEN => true,         // Enable TCP Fast Open (if supported)
+        CURLOPT_ENCODING => "",               // Accept all encodings (gzip, deflate, etc.)
+        CURLOPT_USERAGENT => 'GoLiveHost-QRCodeGen/1.0', // Custom User-Agent
+    ]);
+
+    // Execute the request
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE); // Get HTTP status code
+
+    // Handle errors
+    if ($response === false || $httpCode >= 400) {
+        $error = curl_error($ch) ?: "HTTP Error: $httpCode";
+        curl_close($ch);
+        throw new \Exception("Failed to fetch QR code from API: $error");
+    }
+
+    // Close cURL
+    curl_close($ch);
+
+    return $response;
+}
 
     /**
      * Save the generated QR code to a specified file.
