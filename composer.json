@@ -8,7 +8,6 @@
             "email": "contact@golive.host"
         }
     ],
-    "license": "GoSecureDNS_Open_License",
     "autoload": {
         "psr-4": {
             "GoLiveHost\\QRCodeGen\\": "src/"
