@@ -103,3 +103,4 @@ The GoLive.host QR Code Generator API allows you to generate QR codes. The full 
 ### License
 
 This library is licensed under the **[GoSecuredns Open License](https://license.gosecuredns.org/open)**.
+
